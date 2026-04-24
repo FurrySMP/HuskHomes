@@ -208,6 +208,11 @@ public class HomesManager {
             throw new ValidationException(ValidationException.Type.NAME_TAKEN);
         }
 
+        // Validate the world is not restricted
+        if (plugin.getSettings().getGeneral().isWorldRestricted(position.getWorld())) {
+            throw new ValidationException(ValidationException.Type.RESTRICTED_WORLD);
+        }
+
         // Validate the home name; throw an exception if invalid
         plugin.validateName(name);
 

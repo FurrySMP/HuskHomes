@@ -174,6 +174,17 @@ public final class Settings {
         @Comment("Whether teleportation should be carried out async (ensuring chunks load before teleporting)")
         private boolean teleportAsync = true;
 
+        @Comment("List of world names where players cannot set homes or teleport to via TPA.")
+        private List<String> restrictedWorlds = new ArrayList<>();
+
+        public boolean isWorldRestricted(@NotNull World world) {
+            final String name = world.getName();
+            final String formattedName = name.replace("minecraft:", "");
+            return restrictedWorlds.stream()
+                    .map(n -> n.replace("minecraft:", ""))
+                    .anyMatch(n -> n.equalsIgnoreCase(formattedName));
+        }
+
         @Comment("Settings for home and warp names")
         private NameSettings names = new NameSettings();
 

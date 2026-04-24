@@ -165,6 +165,8 @@ locales:
   error_player_not_found: '[Hata:](#ff3300) [%1% adlı oyuncu bulunamadı.](#ff7e5e)'
   error_player_not_teleportable: '[Error:](#ff3300) [The target player, %1%, cannot be teleported right now.](#ff7e5e)'
   error_rtp_restricted_world: '[Hata:](#ff3300) [Bu dünyada rastgele ışınlanamazsınız.](#ff7e5e)'
+  error_set_home_restricted_world: '[Error:](#ff3300) [You cannot set homes in this world.](#ff7e5e)'
+  error_tpa_restricted_world: '[Error:](#ff3300) [You cannot teleport to this world.](#ff7e5e)'
   error_on_cooldown: '[Hata:](#ff3300) [Tekrar yapmadan önce %1% beklemelisiniz.](#ff7e5e)'
   error_console_command_only: '[Hata:](#ff3300) [Bu komut yalnızca sunucu konsolundan çalıştırılabilir.](#ff7e5e)'
   error_rtp_randomization_timeout: '[Hata:](#ff3300) [Sizi ışınlamak için güvenli bir rasgele konum bulunamadı.](#ff7e5e)'

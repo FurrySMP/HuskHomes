@@ -154,6 +154,13 @@ public class RequestsManager {
         final TeleportRequest request = new TeleportRequest(requester, type, expiry);
         request.setRecipientName(targetUser);
 
+        // Block requests if the destination is restricted
+        if (type == TeleportRequest.Type.TPA_HERE && plugin.getSettings().getGeneral().isWorldRestricted(requester.getPosition().getWorld())) {
+            plugin.getLocales().getLocale("error_tpa_restricted_world")
+                    .ifPresent(requester::sendMessage);
+            return;
+        }
+
         // Lookup the user locally first. If there's a username match globally, perform an exact local check
         final Optional<OnlineUser> localTarget = plugin.isUserOnlineGlobally(targetUser)
                 ? plugin.getOnlineUserExact(targetUser) : plugin.getOnlineUser(targetUser);
@@ -163,6 +170,11 @@ public class RequestsManager {
             }
             if (localTarget.get().isVanished()) {
                 throw new IllegalArgumentException("Cannot send a teleport request to a vanished player");
+            }
+            if (type == TeleportRequest.Type.TPA && plugin.getSettings().getGeneral().isWorldRestricted(localTarget.get().getPosition().getWorld())) {
+                plugin.getLocales().getLocale("error_tpa_restricted_world")
+                        .ifPresent(requester::sendMessage);
+                return;
             }
             plugin.fireEvent(plugin.getSendTeleportRequestEvent(requester, request),
                     (event -> {
@@ -202,6 +214,14 @@ public class RequestsManager {
         // Silently ignore the request if the recipient is ignoring requests or is vanished
         if (isIgnoringRequests(recipient) || recipient.isVanished()) {
             request.setStatus(TeleportRequest.Status.IGNORED);
+            return;
+        }
+
+        // Check if the destination is restricted
+        if (request.getType() == TeleportRequest.Type.TPA && plugin.getSettings().getGeneral().isWorldRestricted(recipient.getPosition().getWorld())) {
+            return;
+        }
+        if (request.getType() == TeleportRequest.Type.TPA_HERE && plugin.getSettings().getGeneral().isWorldRestricted(request.getRequesterPosition().getWorld())) {
             return;
         }
 
