@@ -41,6 +41,12 @@ public interface BukkitHookProvider extends HookProvider {
         if (isDependencyAvailable("PlaceholderAPI")) {
             hooks.add(new PlaceholderAPIHook(getPlugin()));
         }
+        if (isDependencyAvailable("Homestead")) {
+            hooks.add(new HomesteadHook(getPlugin()));
+        }
+        if (isDependencyAvailable("WorldGuard")) {
+            hooks.add(new WorldGuardHook(getPlugin()));
+        }
 
         // Importers
         if (isDependencyAvailable("Essentials")) {

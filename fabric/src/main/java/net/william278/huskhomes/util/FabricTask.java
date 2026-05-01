@@ -102,7 +102,7 @@ public interface FabricTask extends Task {
             if (!cancelled) {
                 this.task = ASYNC_EXEC.scheduleAtFixedRate(
                         runnable,
-                        0,
+                        repeatingTicks * 50,
                         repeatingTicks * 50,
                         TimeUnit.MILLISECONDS);
             }

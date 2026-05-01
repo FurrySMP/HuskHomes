@@ -43,7 +43,7 @@ public class TimedTeleport extends Teleport implements Runnable, Completable {
     private final OnlineUser teleporter;
     private final Position startLocation;
     private final int warmupTime;
-    private Task.Repeating task;
+    private volatile Task.Repeating task;
     private int timeLeft;
 
     protected TimedTeleport(@NotNull OnlineUser executor, @NotNull OnlineUser teleporter, @NotNull Target target,
@@ -89,14 +89,22 @@ public class TimedTeleport extends Teleport implements Runnable, Completable {
             plugin.getLocales().getLocale("teleporting_warmup_start", Integer.toString(timeLeft))
                     .ifPresent(teleporter::sendMessage);
 
-            // Run the warmup
-            this.task = plugin.getRepeatingTask(this, 20L);
-            this.task.run();
+            // Run the warmup (use 1-tick initial delay to ensure the task handle is
+            // assigned before the first execution, preventing a race condition where
+            // cancel() could fail because the platform task hasn't been stored yet)
+            final Task.Repeating repeating = plugin.getRepeatingTask(this, 20L);
+            this.task = repeating;
+            repeating.run();
         });
     }
 
     @Override
     public void run() {
+        // Guard: if the task has already been cancelled, do nothing (prevents orphaned task execution)
+        if (task != null && task.isCancelled()) {
+            return;
+        }
+
         // Cancel if they move or take damage during warmup (including on the final second)
         if (shouldCancelWarmup()) {
             finishWarmup();
@@ -150,6 +158,11 @@ public class TimedTeleport extends Teleport implements Runnable, Completable {
      * @return {@code true} if the warmup was cancelled, {@code false} otherwise
      */
     private boolean shouldCancelWarmup() {
+        // Cancel the timed teleport if the player is no longer online
+        if (!plugin.getOnlineUserMap().containsKey(teleporter.getUuid())) {
+            return true;
+        }
+
         // Cancel the timed teleport if the player takes damage
         if (plugin.getSettings().getGeneral().isTeleportWarmupCancelOnDamage()
                 && plugin.hasTakenWarmupDamage(teleporter.getUuid())) {

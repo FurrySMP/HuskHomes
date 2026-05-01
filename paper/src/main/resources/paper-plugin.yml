@@ -41,3 +41,11 @@ dependencies:
       load: OMIT # Important - Avoid changing this due to circular dependency issues
       required: false
       join-classpath: true
+    WorldGuard:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    Homestead:
+      load: BEFORE
+      required: false
+      join-classpath: true

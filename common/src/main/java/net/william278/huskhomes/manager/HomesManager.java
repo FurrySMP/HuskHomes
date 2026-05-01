@@ -213,6 +213,11 @@ public class HomesManager {
             throw new ValidationException(ValidationException.Type.RESTRICTED_WORLD);
         }
 
+        // Validate the home location is not restricted by claims
+        if (owner instanceof OnlineUser online && plugin.isHomeLocationRestricted(online, position)) {
+            throw new ValidationException(ValidationException.Type.RESTRICTED_CLAIM);
+        }
+
         // Validate the home name; throw an exception if invalid
         plugin.validateName(name);
 

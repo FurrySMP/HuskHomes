@@ -39,6 +39,7 @@ import net.william278.huskhomes.position.Position;
 import net.william278.huskhomes.position.World;
 import net.william278.huskhomes.random.RandomTeleportProvider;
 import net.william278.huskhomes.user.ConsoleUser;
+import net.william278.huskhomes.user.OnlineUser;
 import net.william278.huskhomes.user.UserProvider;
 import net.william278.huskhomes.util.*;
 import org.intellij.lang.annotations.Subst;
@@ -279,6 +280,17 @@ public interface HuskHomes extends Task.Supplier, EventDispatcher, SavePositionP
         }
         @Subst("foo") final String joined = String.join("/", data);
         return Key.key("huskhomes", joined);
+    }
+
+    /**
+     * Returns true if the user's home location is restricted by an external claim.
+     *
+     * @param user     The user setting the home
+     * @param position The position of the home
+     * @return true if restricted
+     */
+    default boolean isHomeLocationRestricted(@NotNull OnlineUser user, @NotNull Position position) {
+        return false;
     }
 
 }

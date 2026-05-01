@@ -74,6 +74,9 @@ public class ValidationException extends IllegalArgumentException {
             case RESTRICTED_WORLD -> plugin.getLocales()
                     .getLocale("error_set_home_restricted_world")
                     .ifPresent(viewer::sendMessage);
+            case RESTRICTED_CLAIM -> plugin.getLocales()
+                    .getLocale("error_set_home_restricted_claim")
+                    .ifPresent(viewer::sendMessage);
             default -> {
                 // Do nothing (silently handle validation errors)
             }
@@ -121,6 +124,7 @@ public class ValidationException extends IllegalArgumentException {
         DESCRIPTION_INVALID_CHARACTERS,
         DESCRIPTION_INVALID_LENGTH,
         RESTRICTED_WORLD,
+        RESTRICTED_CLAIM,
     }
 
 }

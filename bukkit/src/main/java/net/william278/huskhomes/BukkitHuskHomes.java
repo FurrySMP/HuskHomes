@@ -318,6 +318,17 @@ public class BukkitHuskHomes extends JavaPlugin implements HuskHomes, BukkitTask
     }
 
     @Override
+    public boolean isHomeLocationRestricted(@NotNull OnlineUser user, @NotNull Position position) {
+        final Player player = ((BukkitUser) user).getPlayer();
+        final org.bukkit.Location location = Adapter.adapt(position);
+
+        return getHook(net.william278.huskhomes.hook.HomesteadHook.class)
+                        .map(hook -> hook.isBlockedByHomestead(player, location)).orElse(false)
+                || getHook(net.william278.huskhomes.hook.WorldGuardHook.class)
+                        .map(hook -> hook.isBlockedByWorldGuard(player, location)).orElse(false);
+    }
+
+    @Override
     public void closeDatabase() {
         if (database != null) {
             database.close();

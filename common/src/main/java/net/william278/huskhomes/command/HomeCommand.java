@@ -56,6 +56,14 @@ public abstract class HomeCommand extends SavedPositionCommand<Home> {
             return;
         }
 
+        if (optionalTeleporter.get() instanceof OnlineUser teleporterUser) {
+            if (plugin.isHomeLocationRestricted(teleporterUser, home)) {
+                plugin.getLocales().getLocale("error_home_teleport_restricted_claim")
+                        .ifPresent(executor::sendMessage);
+                return;
+            }
+        }
+
         this.teleport(
                 executor, optionalTeleporter.get(), home,
                 (executor instanceof OnlineUser user && home.getOwner().equals(user)

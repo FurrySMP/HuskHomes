@@ -147,7 +147,7 @@ public interface BukkitTask extends Task {
             if (!cancelled) {
                 final AsynchronousScheduler scheduler = ((BukkitHuskHomes) getPlugin()).getAsyncScheduler();
                 this.task = scheduler.runAtFixedRate(
-                        runnable, Duration.ZERO,
+                        runnable, Duration.of(repeatingTicks * 50L, ChronoUnit.MILLIS),
                         Duration.of(repeatingTicks * 50L, ChronoUnit.MILLIS)
                 );
             }

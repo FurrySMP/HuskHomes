@@ -43,6 +43,10 @@ public interface Task extends Runnable {
             cancelled = true;
         }
 
+        public boolean isCancelled() {
+            return cancelled;
+        }
+
         @NotNull
         @Override
         public HuskHomes getPlugin() {
